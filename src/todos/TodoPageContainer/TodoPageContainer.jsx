@@ -3,7 +3,7 @@ import TodoList from "./TodoList/TodoList";
 import AddTodo from "./AddTodo/AddTodo";
 import TodoTypeFilter from "../TodoTypeFilter/TodoTypeFilter";
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+
 import {
   todosFetched,
   todoAdded,
@@ -129,19 +129,14 @@ function mapStateToProps(state) {
   return { todoList: state.todos.todoList };
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(
-    {
-      todosFetched,
-      showLoading,
-      hideLoading,
-      addTodo,
-      todoAdded,
-      todoDeleted,
-      todoToggled,
-    },
-    dispatch
-  );
-}
+const mapDispatchToProps = {
+  todosFetched,
+  showLoading,
+  hideLoading,
+  addTodo,
+  todoAdded,
+  todoDeleted,
+  todoToggled,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(TodoPage);
