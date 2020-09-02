@@ -1,0 +1,5 @@
+.todo-page-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin: 5rem;
+}
