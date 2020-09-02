@@ -23,6 +23,10 @@ const FILTER_TYPE = {
 
 const FILTER_TYPES = Object.values(FILTER_TYPE);
 
+const showErrorAlert = () => {
+  alert("An unexpected error occured");
+};
+
 function TodoPage({
   todoList,
   todosFetched,
@@ -57,6 +61,7 @@ function TodoPage({
         .then((response) => {
           todosFetched(response.data);
         })
+        .catch(showErrorAlert)
         .finally(() => {
           hideLoading();
         });
@@ -72,6 +77,7 @@ function TodoPage({
       .then((response) => {
         todoAdded(response.data);
       })
+      .catch(showErrorAlert)
       .finally(() => hideLoading());
   };
 
@@ -85,6 +91,7 @@ function TodoPage({
       .then((response) => {
         todoToggled(id, response.data);
       })
+      .catch(showErrorAlert)
       .finally(() => hideLoading());
   };
 
@@ -96,6 +103,7 @@ function TodoPage({
           todoDeleted(id);
         }
       })
+      .catch(showErrorAlert)
       .finally(() => hideLoading());
   };
 
