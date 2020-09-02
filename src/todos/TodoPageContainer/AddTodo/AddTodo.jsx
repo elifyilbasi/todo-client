@@ -15,6 +15,7 @@ export default function AddTodo({ onTodoAdd }) {
       <form onSubmit={submitForm}>
         <input
           type="text"
+          placeholder="Enter description for todo"
           className="form-control"
           name="addedTodo"
           value={title}
