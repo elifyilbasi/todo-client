@@ -70,6 +70,8 @@ const todoItems = [
   },
 ];
 
+import "./todoPageContainer.css";
+
 const FILTER_TYPE = {
   ALL: "ALL",
   NOT_COMPLETED: "NOT_COMPLETED",
@@ -101,7 +103,7 @@ export default function TodoPageContainer() {
   };
 
   return (
-    <div>
+    <div className="todo-page-container-wrapper">
       <AddTodo onTodoAdd={onTodoAdd} />
       <TodoList
         items={todoItems}

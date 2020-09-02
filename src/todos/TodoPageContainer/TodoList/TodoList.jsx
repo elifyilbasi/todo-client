@@ -1,5 +1,6 @@
 import React from "react";
 import TodoItem from "./TodoItem/TodoItem";
+import "./todoList.css";
 
 export default function TodoList({
   items,
@@ -8,7 +9,7 @@ export default function TodoList({
 }) {
   return (
     items.length && (
-      <ul>
+      <ul className="todo-items-list">
         {items.map((item) => (
           <li key={item.id}>
             <TodoItem

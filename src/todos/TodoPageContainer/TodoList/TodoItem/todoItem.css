@@ -1,0 +1,12 @@
+.todo-item-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.todo-item-delete-btn {
+  margin-left: auto;
+}
+
+.todo-item-title {
+  margin-left: 10px;
+}

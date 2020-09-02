@@ -13,7 +13,13 @@ export default function AddTodo({ onTodoAdd }) {
   return (
     <div>
       <form onSubmit={submitForm}>
-        <input name="addedTodo" value={title} onChange={onTitleChange} />
+        <input
+          type="text"
+          className="form-control"
+          name="addedTodo"
+          value={title}
+          onChange={onTitleChange}
+        />
       </form>
     </div>
   );
