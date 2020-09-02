@@ -1,74 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TodoList from "./TodoList/TodoList";
 import AddTodo from "./AddTodo/AddTodo";
 import TodoTypeFilter from "../TodoTypeFilter/TodoTypeFilter";
-
-const todoItems = [
-  {
-    id: 5373,
-    title: "dsadsa",
-    url: "https://todo-hapi-postgres.herokuapp.com/5373",
-    completed: false,
-    order: 1,
-    object: "todo",
-  },
-  {
-    id: 5374,
-    title: "dsadsa",
-    url: "https://todo-hapi-postgres.herokuapp.com/5374",
-    completed: false,
-    order: 1,
-    object: "todo",
-  },
-  {
-    id: 5375,
-    title: "dsadsa",
-    url: "https://todo-hapi-postgres.herokuapp.com/5375",
-    completed: false,
-    order: 2,
-    object: "todo",
-  },
-  {
-    id: 5376,
-    title: "dsdadasdsa",
-    url: "https://todo-hapi-postgres.herokuapp.com/5376",
-    completed: false,
-    order: 3,
-    object: "todo",
-  },
-  {
-    id: 5377,
-    title: "ddsfsdfsdfds",
-    url: "https://todo-hapi-postgres.herokuapp.com/5377",
-    completed: false,
-    order: 4,
-    object: "todo",
-  },
-  {
-    id: 5378,
-    title: "test 2",
-    url: "https://todo-hapi-postgres.herokuapp.com/5378",
-    completed: false,
-    order: 5,
-    object: "todo",
-  },
-  {
-    id: 5379,
-    title: "test",
-    url: "https://todo-hapi-postgres.herokuapp.com/5379",
-    completed: false,
-    order: 1,
-    object: "todo",
-  },
-  {
-    id: 5380,
-    title: "test 3",
-    url: "https://todo-hapi-postgres.herokuapp.com/5380",
-    completed: false,
-    order: 6,
-    object: "todo",
-  },
-];
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import {
+  todosFetched,
+  todoAdded,
+  todoDeleted,
+  todoToggled,
+} from "../todoDucks";
+import { fetchTodos, addTodo, deleteTodo, toggleTodo } from "../todoWebApi";
+import { showLoading, hideLoading } from "../../app/loading/loadingDucks";
 
 import "./todoPageContainer.css";
 
@@ -79,12 +22,40 @@ const FILTER_TYPE = {
 };
 const FILTER_TYPES = Object.values(FILTER_TYPE);
 
-export default function TodoPageContainer() {
+function TodoPage({
+  todoList,
+  todosFetched,
+  showLoading,
+  hideLoading,
+  todoAdded,
+  todoDeleted,
+  todoToggled,
+}) {
   const [filterType, setFilterType] = useState(FILTER_TYPE.ALL);
+
+  useEffect(() => {
+    if (todoList === null) {
+      showLoading();
+      fetchTodos()
+        .then((response) => {
+          todosFetched(response.data);
+        })
+        .finally(() => {
+          hideLoading();
+        });
+    }
+  }, [todoList, hideLoading, showLoading, todosFetched]);
 
   // TODO implement logic
   const onTodoAdd = (title) => {
-    console.log(title);
+    showLoading();
+    // FIXME fix order
+    const newItem = { title, completed: false, order: 1 };
+    addTodo(newItem)
+      .then((response) => {
+        todoAdded(response.data);
+      })
+      .finally(() => hideLoading());
   };
 
   //TODO implement logic
@@ -92,21 +63,31 @@ export default function TodoPageContainer() {
     console.log(newFilter);
   };
 
-  //TODO implement logic
-  const onTodoItemToggle = (id) => {
-    console.log(id);
+  const onTodoItemToggle = (id, newState) => {
+    showLoading();
+    toggleTodo(id, newState)
+      .then((response) => {
+        todoToggled(id, response.data);
+      })
+      .finally(() => hideLoading());
   };
 
-  //TODO implement logic
   const onTodoItemDelete = (id) => {
-    console.log(id);
+    showLoading();
+    deleteTodo(id)
+      .then((response) => {
+        if (response.data.success) {
+          todoDeleted(id);
+        }
+      })
+      .finally(() => hideLoading());
   };
 
   return (
     <div className="todo-page-container-wrapper">
       <AddTodo onTodoAdd={onTodoAdd} />
       <TodoList
-        items={todoItems}
+        items={todoList}
         onTodoItemToggle={onTodoItemToggle}
         onTodoItemDelete={onTodoItemDelete}
       />
@@ -118,3 +99,24 @@ export default function TodoPageContainer() {
     </div>
   );
 }
+
+function mapStateToProps(state) {
+  return { todoList: state.todos.todoList };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(
+    {
+      todosFetched,
+      showLoading,
+      hideLoading,
+      addTodo,
+      todoAdded,
+      todoDeleted,
+      todoToggled,
+    },
+    dispatch
+  );
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TodoPage);

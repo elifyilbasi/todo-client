@@ -4,22 +4,19 @@ import { faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import "./todoItem.css";
 
 export default function TodoItem({ item, onTodoItemToggle, onTodoItemDelete }) {
-  const [checked, setChecked] = useState(false);
-
   return (
     <div className="todo-item-wrapper">
       <input
         className="checkbox"
         type="checkbox"
         onChange={() => {
-          onTodoItemToggle(item.id);
-          setChecked(!checked);
+          onTodoItemToggle(item.id, !item.completed);
         }}
-        checked={checked}
+        checked={item.completed}
       ></input>
       <div
         className="todo-item-title"
-        style={{ textDecoration: checked ? "line-through" : "none" }}
+        style={{ textDecoration: item.completed ? "line-through" : "none" }}
       >
         {item.title}
       </div>

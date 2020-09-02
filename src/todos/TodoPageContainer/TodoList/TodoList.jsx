@@ -8,7 +8,7 @@ export default function TodoList({
   onTodoItemDelete,
 }) {
   return (
-    items.length && (
+    !!(items && items.length) && (
       <ul className="todo-items-list">
         {items.map((item) => (
           <li key={item.id}>

@@ -15,9 +15,9 @@ export const todoAdded = (newItem) => ({
   payload: newItem,
 });
 
-export const todoToggled = (toggledItemId) => ({
+export const todoToggled = (toggledItemId, newItemState) => ({
   type: TYPES.todoToggled,
-  payload: toggledItemId,
+  payload: {id: toggledItemId, newItemState }
 });
 
 export const todoDeleted = (deletedItemId) => ({
@@ -44,11 +44,8 @@ const reducer = function (state = INITIAL_STATE, action) {
       };
     }
     case TYPES.todoToggled: {
-      const id = action.payload;
+      const {id, newItemState } = action.payload;
       const itemIndex = state.todoList.findIndex((item) => item.id === id);
-
-      const item = state.todoList[itemIndex];
-      const newItemState = { ...item, completed: !item.completed };
 
       const newList = [...state.todoList];
       newList[itemIndex] = newItemState;
