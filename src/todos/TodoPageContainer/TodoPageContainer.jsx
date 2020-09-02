@@ -46,11 +46,11 @@ function TodoPage({
     }
   }, [todoList, hideLoading, showLoading, todosFetched]);
 
-  // TODO implement logic
   const onTodoAdd = (title) => {
     showLoading();
-    // FIXME fix order
-    const newItem = { title, completed: false, order: 1 };
+    const highestOrderItem = todoList.slice(-1)[0];
+    const highestOrder = highestOrderItem ? highestOrderItem.order : 0;
+    const newItem = { title, completed: false, order: highestOrder + 1 };
     addTodo(newItem)
       .then((response) => {
         todoAdded(response.data);
