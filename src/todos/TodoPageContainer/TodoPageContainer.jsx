@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import TodoList from "./TodoList/TodoList";
 import AddTodo from "./AddTodo/AddTodo";
 import TodoTypeFilter from "../TodoTypeFilter/TodoTypeFilter";
@@ -20,6 +20,7 @@ const FILTER_TYPE = {
   NOT_COMPLETED: "NOT_COMPLETED",
   COMPLETED: "COMPLETED",
 };
+
 const FILTER_TYPES = Object.values(FILTER_TYPE);
 
 function TodoPage({
@@ -32,6 +33,22 @@ function TodoPage({
   todoToggled,
 }) {
   const [filterType, setFilterType] = useState(FILTER_TYPE.ALL);
+
+  const visibleTodoList = useMemo(() => {
+    if (!todoList) {
+      return null;
+    }
+
+    switch (filterType) {
+      case FILTER_TYPE.COMPLETED:
+        return todoList.filter((todo) => todo.completed);
+      case FILTER_TYPE.NOT_COMPLETED:
+        return todoList.filter((todo) => !todo.completed);
+      case FILTER_TYPE.ALL:
+      default:
+        return todoList;
+    }
+  }, [todoList, filterType]);
 
   useEffect(() => {
     if (todoList === null) {
@@ -58,9 +75,8 @@ function TodoPage({
       .finally(() => hideLoading());
   };
 
-  //TODO implement logic
   const onFilterChange = (newFilter) => {
-    console.log(newFilter);
+    setFilterType(newFilter);
   };
 
   const onTodoItemToggle = (id, newState) => {
@@ -87,13 +103,14 @@ function TodoPage({
     <div className="todo-page-container-wrapper">
       <AddTodo onTodoAdd={onTodoAdd} />
       <TodoList
-        items={todoList}
+        items={visibleTodoList}
         onTodoItemToggle={onTodoItemToggle}
         onTodoItemDelete={onTodoItemDelete}
       />
       <TodoTypeFilter
         filterTypes={FILTER_TYPES}
         selectedFilterType={filterType}
+        visibleItemCount={visibleTodoList ? visibleTodoList.length : 0}
         onFilterChange={onFilterChange}
       />
     </div>
