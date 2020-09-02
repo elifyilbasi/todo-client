@@ -90,10 +90,24 @@ export default function TodoPageContainer() {
     console.log(newFilter);
   };
 
+  //TODO implement logic
+  const onTodoItemToggle = (id) => {
+    console.log(id);
+  };
+
+  //TODO implement logic
+  const onTodoItemDelete = (id) => {
+    console.log(id);
+  };
+
   return (
     <div>
       <AddTodo onTodoAdd={onTodoAdd} />
-      <TodoList items={todoItems} />
+      <TodoList
+        items={todoItems}
+        onTodoItemToggle={onTodoItemToggle}
+        onTodoItemDelete={onTodoItemDelete}
+      />
       <TodoTypeFilter
         filterTypes={FILTER_TYPES}
         selectedFilterType={filterType}
